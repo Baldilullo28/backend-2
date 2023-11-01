@@ -6,7 +6,7 @@ const PORT = 8080;
 // Middleware para procesar el cuerpo de las solicitudes en formato JSON
 app.use(express.json());
 
-// Definir un array para almacenar productos y carritos
+// Definir un array para almacenar productos y carrits
 let products = [];
 let carts = [];
 
@@ -14,13 +14,13 @@ let carts = [];
 const productsRouter = express.Router();
 
 productsRouter.get("/", (req, res) => {
-    // Implementa la lógica para listar todos los productos
+    // Implemento la lógica para listar todos los productos
     res.json(products);
 });
 
 productsRouter.get("/:pid", (req, res) => {
     const { pid } = req.params;
-    // Implementa la lógica para obtener un producto por su ID
+    // Implemento la lógica para obtener un producto por su ID
     const product = products.find((p) => p.id === pid);
     if (product) {
         res.json(product);
@@ -30,7 +30,7 @@ productsRouter.get("/:pid", (req, res) => {
 });
 
 productsRouter.post("/", (req, res) => {
-    // Implementa la lógica para crear un nuevo producto
+    // Implemento la lógica para crear un nuevo producto
     const newProduct = req.body;
     newProduct.id = generateProductId(); // Genera un nuevo ID
     products.push(newProduct);
@@ -40,7 +40,7 @@ productsRouter.post("/", (req, res) => {
 
 productsRouter.put("/:pid", (req, res) => {
     const { pid } = req.params;
-    // Implementa la lógica para actualizar un producto por su ID
+    // Implemento la lógica para actualizar un producto por su ID
     const updatedProduct = req.body;
     const index = products.findIndex((p) => p.id === pid);
     if (index !== -1) {
@@ -54,7 +54,7 @@ productsRouter.put("/:pid", (req, res) => {
 
 productsRouter.delete("/:pid", (req, res) => {
     const { pid } = req.params;
-    // Implementa la lógica para eliminar un producto por su ID
+    // Implemento la lógica para eliminar un producto por su ID
     const index = products.findIndex((p) => p.id === pid);
     if (index !== -1) {
         const deletedProduct = products.splice(index, 1);
@@ -71,9 +71,9 @@ app.use("/api/products", productsRouter);
 const cartsRouter = express.Router();
 
 cartsRouter.post("/", (req, res) => {
-    // Implementa la lógica para crear un nuevo carrito
+    // Implementoo la lógica para crear un nuevo carrito
     const newCart = req.body;
-    newCart.id = generateCartId(); // Genera un nuevo ID
+    newCart.id = generateCartId(); // Genero un nuevo ID
     carts.push(newCart);
     persistCarts();
     res.status(201).json(newCart);
@@ -81,7 +81,7 @@ cartsRouter.post("/", (req, res) => {
 
 cartsRouter.get("/:cid", (req, res) => {
     const { cid } = req.params;
-    // Implementa la lógica para obtener productos de un carrito por su ID
+    // Implemento la lógica para obtener productos de un carrito por su ID
     const cart = carts.find((c) => c.id === cid);
     if (cart) {
         res.json(cart.products);
@@ -93,7 +93,7 @@ cartsRouter.get("/:cid", (req, res) => {
 cartsRouter.post("/:cid/product/:pid", (req, res) => {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
-    // Implementa la lógica para agregar un producto al carrito
+    // Implemento la lógica para agregar un producto al carrito
     const cart = carts.find((c) => c.id === cid);
     const product = products.find((p) => p.id === pid);
     if (cart && product) {
@@ -115,23 +115,27 @@ app.use("/api/carts", cartsRouter);
 // Funciones auxiliares para generar IDs y persistir datos en archivos
 
 function generateProductId() {
-    // Implementa la generación de un nuevo ID para productos
+    // Implemento la generación de un nuevo ID para productos
     // Asegúrate de que el ID no se duplique
+    // ...
 }
 
 function generateCartId() {
     // Implementa la generación de un nuevo ID para carritos
     // Asegúrate de que el ID no se duplique
+    // ...
 }
 
 function persistProducts() {
     // Implementa la persistencia de datos de productos en un archivo
     // Utiliza el módulo fs para escribir en un archivo productos.json
+    // ...
 }
 
 function persistCarts() {
     // Implementa la persistencia de datos de carritos en un archivo
     // Utiliza el módulo fs para escribir en un archivo carrito.json
+    // ...
 }
 
 // Iniciar el servidor
