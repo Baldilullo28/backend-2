@@ -1,0 +1,20 @@
+[
+    {
+        "id": "producto-1",
+        "title": "Reloj Mulco digital",
+        "description": "Reloj de alta gama",
+        "code": "001",
+        "price": 200,
+        "stock": 100,
+        "category": "reloj digital"
+    },
+    {
+        "id": "producto-2",
+        "title": "Reloj Casio aguja",
+        "description": "Reloj alta gama",
+        "code": "002",
+        "price": 150,
+        "stock": 50,
+        "category": "reloj aguja"
+    }
+]
