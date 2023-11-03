@@ -4,7 +4,6 @@ const ProductManager = require('../models/productManager');
 
 const productManager = new ProductManager();
 
-// Crear un nuevo producto
 router.post('/', (req, res) => {
     const newProduct = req.body;
     const addedProduct = productManager.addProduct(newProduct);
@@ -15,13 +14,11 @@ router.post('/', (req, res) => {
     }
 });
 
-// Obtener todos los productos
 router.get('/', (req, res) => {
     const products = productManager.getProducts();
     res.json(products);
 });
 
-// Obtener un producto por su ID
 router.get('/:productId', (req, res) => {
     const { productId } = req.params;
     const product = productManager.getProductById(productId);
@@ -32,7 +29,6 @@ router.get('/:productId', (req, res) => {
     }
 });
 
-// Actualizar un producto por su ID
 router.put('/:productId', (req, res) => {
     const { productId } = req.params;
     const updatedProduct = req.body;
@@ -44,7 +40,6 @@ router.put('/:productId', (req, res) => {
     }
 });
 
-// Eliminar un producto por su ID
 router.delete('/:productId', (req, res) => {
     const { productId } = req.params;
     const deletedProduct = productManager.deleteProduct(productId);

@@ -4,7 +4,6 @@ const CartManager = require('../models/cartManager');
 
 const cartManager = new CartManager();
 
-// Crear un nuevo carrito
 router.post('/', (req, res) => {
     const newCart = req.body;
     const addedCart = cartManager.addCart(newCart);
@@ -15,7 +14,6 @@ router.post('/', (req, res) => {
     }
 });
 
-// Agregar un producto a un carrito
 router.post('/:cartId/product/:productId', (req, res) => {
     const { cartId, productId } = req.params;
     const { quantity } = req.body;
@@ -27,7 +25,6 @@ router.post('/:cartId/product/:productId', (req, res) => {
     }
 });
 
-// Obtener información de un carrito por su ID
 router.get('/:cartId', (req, res) => {
     const { cartId } = req.params;
     const cart = cartManager.getCart(cartId);
@@ -38,7 +35,6 @@ router.get('/:cartId', (req, res) => {
     }
 });
 
-// Eliminar un carrito por su ID
 router.delete('/:cartId', (req, res) => {
     const { cartId } = req.params;
     const deletedCart = cartManager.deleteCart(cartId);

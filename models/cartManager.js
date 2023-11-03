@@ -5,7 +5,7 @@ class CartManager {
 
   addCart(cart) {
     if (this.validateCart(cart)) {
-      // Genera un ID único para el carrito (puedes usar una librería como `uuid` para esto)
+
       cart.id = generateCartId();
       this.carts.push(cart);
       return cart;
@@ -24,7 +24,7 @@ class CartManager {
   addProductToCart(cartId, productId, quantity) {
     const cart = this.getCartById(cartId);
     if (cart) {
-      // Agregar la lógica para agregar productos al carrito aquí
+
       const productIndex = cart.products.findIndex(product => product.productId === productId);
       if (productIndex !== -1) {
         cart.products[productIndex].quantity += quantity;

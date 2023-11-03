@@ -5,7 +5,6 @@ class ProductManager {
 
   addProduct(product) {
     if (this.validateProduct(product)) {
-      // Genera un ID único para el producto (puedes usar una librería como `uuid` para esto)
       product.id = generateProductId();
       this.products.push(product);
       return product;
