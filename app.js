@@ -5,21 +5,38 @@ const PORT = 8080;
 
 app.use(express.json());
 
-let carts = [];
+const CartManager = require("./models/cartManager");
+const ProductManager = require("./models/productManager");
 
+const cartManager = new CartManager();
+const productManager = new ProductManager();
+
+// Middleware para cargar datos de carritos y productos
+app.use((req, res, next) => {
+    try {
+        const cartsData = fs.readFileSync("data/carrito.json", "utf-8");
+        cartManager.setCarts(JSON.parse(cartsData));
+    } catch (error) {
+        cartManager.setCarts([]);
+    }
+
+    try {
+        const productsData = fs.readFileSync("data/productos.json", "utf-8");
+        productManager.setProducts(JSON.parse(productsData));
+    } catch (error) {
+        productManager.setProducts([]);
+    }
+
+    next();
+});
+
+// Rutas para gestionar carritos
 const cartsRouter = require("./routes/carts");
-app.use("/api/carts", cartsRouter);
+app.use("/api/carts", cartsRouter(cartManager, productManager));
 
-function generateCartId() {
-    const timestamp = new Date().getTime().toString(36);
-    const randomNumber = Math.random().toString(36).substr(2, 5);
-    return timestamp + randomNumber;
-}
-
-function persistCarts() {
-    const data = JSON.stringify(carts, null, 2);
-    fs.writeFileSync("data/carrito.json", data);
-}
+// Rutas para gestionar productos
+const productsRouter = require("./routes/products");
+app.use("/api/products", productsRouter(productManager));
 
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${PORT}`);

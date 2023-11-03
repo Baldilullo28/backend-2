@@ -1,27 +1,30 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
+const ProductManager = require('../models/productManager');
 
+const productManager = new ProductManager();
 
-router.use((req, res, next) => {
-    try {
-       
-        const productsData = fs.readFileSync('data/productos.json', 'utf-8');
-        products = JSON.parse(productsData);
-    } catch (error) {
-        products = [];
+// Crear un nuevo producto
+router.post('/', (req, res) => {
+    const newProduct = req.body;
+    const addedProduct = productManager.addProduct(newProduct);
+    if (addedProduct) {
+        res.status(201).json(addedProduct);
+    } else {
+        res.status(400).json({ error: 'No se pudo agregar el producto' });
     }
-    next();
 });
 
+// Obtener todos los productos
 router.get('/', (req, res) => {
+    const products = productManager.getProducts();
     res.json(products);
 });
 
-
-router.get('/:pid', (req, res) => {
-    const { pid } = req.params;
-    const product = products.find((p) => p.id === pid);
+// Obtener un producto por su ID
+router.get('/:productId', (req, res) => {
+    const { productId } = req.params;
+    const product = productManager.getProductById(productId);
     if (product) {
         res.json(product);
     } else {
@@ -29,35 +32,24 @@ router.get('/:pid', (req, res) => {
     }
 });
 
-
-router.post('/', (req, res) => {
-    const newProduct = req.body;
-    newProduct.id = generateProductId(); 
-    products.push(newProduct);
-    persistProducts(); 
-    res.status(201).json(newProduct);
-});
-
-router.put('/:pid', (req, res) => {
-    const { pid } = req.params;
+// Actualizar un producto por su ID
+router.put('/:productId', (req, res) => {
+    const { productId } = req.params;
     const updatedProduct = req.body;
-    const index = products.findIndex((p) => p.id === pid);
-    if (index !== -1) {
-        products[index] = { ...products[index], ...updatedProduct };
-        persistProducts(); 
-        res.json(products[index]);
+    const updatedProductResult = productManager.updateProduct(productId, updatedProduct);
+    if (updatedProductResult) {
+        res.json(updatedProductResult);
     } else {
         res.status(404).json({ error: 'Producto no encontrado' });
     }
 });
 
-router.delete('/:pid', (req, res) => {
-    const { pid } = req.params;
-    const index = products.findIndex((p) => p.id === pid);
-    if (index !== -1) {
-        const deletedProduct = products.splice(index, 1);
-        persistProducts(); 
-        res.json(deletedProduct[0]);
+// Eliminar un producto por su ID
+router.delete('/:productId', (req, res) => {
+    const { productId } = req.params;
+    const deletedProduct = productManager.deleteProduct(productId);
+    if (deletedProduct) {
+        res.json(deletedProduct);
     } else {
         res.status(404).json({ error: 'Producto no encontrado' });
     }

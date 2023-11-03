@@ -1,54 +1,51 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
+const CartManager = require('../models/cartManager');
 
+const cartManager = new CartManager();
 
-router.use((req, res, next) => {
-    try {
-        
-        const cartsData = fs.readFileSync('data/carrito.json', 'utf-8');
-        carts = JSON.parse(cartsData);
-    } catch (error) {
-        carts = [];
-    }
-    next();
-});
-
+// Crear un nuevo carrito
 router.post('/', (req, res) => {
     const newCart = req.body;
-    newCart.id = generateCartId(); 
-    carts.push(newCart);
-    persistCarts(); 
-    res.status(201).json(newCart);
+    const addedCart = cartManager.addCart(newCart);
+    if (addedCart) {
+        res.status(201).json(addedCart);
+    } else {
+        res.status(400).json({ error: 'No se pudo crear el carrito' });
+    }
 });
 
-router.get('/:cid', (req, res) => {
-    const { cid } = req.params;
-    const cart = carts.find((c) => c.id === cid);
+// Agregar un producto a un carrito
+router.post('/:cartId/product/:productId', (req, res) => {
+    const { cartId, productId } = req.params;
+    const { quantity } = req.body;
+    const addedProduct = cartManager.addProductToCart(cartId, productId, quantity);
+    if (addedProduct) {
+        res.status(201).json(addedProduct);
+    } else {
+        res.status(404).json({ error: 'No se pudo agregar el producto al carrito' });
+    }
+});
+
+// Obtener información de un carrito por su ID
+router.get('/:cartId', (req, res) => {
+    const { cartId } = req.params;
+    const cart = cartManager.getCart(cartId);
     if (cart) {
-        res.json(cart.products);
+        res.json(cart);
     } else {
         res.status(404).json({ error: 'Carrito no encontrado' });
     }
 });
 
-router.post('/:cid/product/:pid', (req, res) => {
-    const { cid, pid } = req.params;
-    const { quantity } = req.body;
-    const cart = carts.find((c) => c.id === cid);
-    const product = products.find((p) => p.id === pid); 
-
-    if (cart && product) {
-        const existingProduct = cart.products.find((p) => p.product === pid);
-        if (existingProduct) {
-            existingProduct.quantity += quantity;
-        } else {
-            cart.products.push({ product: pid, quantity });
-        }
-        persistCarts(); 
-        res.json(cart.products);
+// Eliminar un carrito por su ID
+router.delete('/:cartId', (req, res) => {
+    const { cartId } = req.params;
+    const deletedCart = cartManager.deleteCart(cartId);
+    if (deletedCart) {
+        res.json(deletedCart);
     } else {
-        res.status(404).json({ error: 'Carrito o producto no encontrado' });
+        res.status(404).json({ error: 'Carrito no encontrado' });
     }
 });
 
